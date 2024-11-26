@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Loja de HQs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/style/styles.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+        <div>
+            <a href="index.html">
+                <img src="assets/logo.png" alt="Logo" class="logo">
+            </a>
+        </div>
+
+        <!-- Botão de Sair -->
+        <div>
+            <form class="d-flex mx-3">
+                <a href="/" class="btn btn-outline-light">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </a>
+            </form>
+        </div>
+    </header>
+
+
+    <!-- Conteúdo Principal -->
+    <div class="container my-5">
+        <h2 class="text-center">Gerenciamento de HQs</h2>
+
+        <!-- Botão para Adicionar Novo Item -->
+        <div class="text-end mb-3">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                <i class="bi bi-plus-circle"></i> Adicionar HQ
+            </button>
+        </div>
+
+        <!-- Cards de HQs -->
+        <div class="row">
+            {{#each revistas}}
+            <div class="col-md-4 my-3">
+                <div class="card h-100">
+                    <img src="{{imagem}}" class="card-img-top" alt="Imagem da HQ">
+                    <div class="card-body">
+                        <h5 class="card-title">{{titulo}}</h5>
+                        <p class="card-text"><strong>Autor:</strong> {{autor}}</p>
+                        <p class="card-text"><strong>Descrição:</strong> {{descricao}}</p>
+                        <p class="card-text"><strong>Preço:</strong> R$ {{preco}}</p>
+
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <!-- Botão Editar -->
+                        <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal"
+                            data-id="{{id}}" data-titulo="{{titulo}}" data-autor="{{autor}}"
+                            data-descricao="{{descricao}}" data-imagem="{{imagem}}" data-preco="{{preco}}">
+                            <i class="bi bi-pencil"></i> Editar
+                        </button>
+
+                        <!-- Botão Excluir -->
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                            data-id="{{id}}">
+                            <i class="bi bi-trash"></i> Excluir
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <!--ƒƒ== Modal Adicionar -->
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Adicionar HQ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/cadastro-hq" method="POST">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="autor" class="form-label">Autor</label>
+                                <input type="text" class="form-control" id="autor" name="autor" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricao" name="descricao" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagem" class="form-label">Imagem</label>
+                                <input type="text" class="form-control" id="imagem" name="imagem" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="preco" class="form-label">Preço</label>
+                                <input type="text" class="form-control" id="preco" name="preco" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Adicionar HQ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Editar -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Editar HQ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editForm" action="/editar-hq/{{id}}" method="POST">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="autor" class="form-label">Autor</label>
+                                <input type="text" class="form-control" id="autor" name="autor" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descricao" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricao" name="descricao" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagem" class="form-label">Imagem</label>
+                                <input type="text" class="form-control" id="imagem" name="imagem" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="preco" class="form-label">Preço</label>
+                                <input type="text" class="form-control" id="preco" name="preco" required>
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">Salvar Alterações</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Excluir -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Excluir HQ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza de que deseja excluir esta HQ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <!-- Formulário para Excluir -->
+                        <form id="deleteForm" method="POST">
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            const editModal = document.getElementById('editModal');
+            editModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // O botão que foi clicado
+                const titulo = button.getAttribute('data-titulo');
+                const autor = button.getAttribute('data-autor');
+                const descricao = button.getAttribute('data-descricao');
+                const imagem = button.getAttribute('data-imagem');
+                const preco = button.getAttribute('data-preco');
+                const id = button.getAttribute('data-id'); // Captura o ID da HQ
+
+                // Preenche os campos do modal com os dados extraídos
+                const modalTitulo = editModal.querySelector('#titulo');
+                const modalAutor = editModal.querySelector('#autor');
+                const modalDescricao = editModal.querySelector('#descricao');
+                const modalImagem = editModal.querySelector('#imagem');
+                const modalPreco = editModal.querySelector('#preco');
+                const formAction = editModal.querySelector('#editForm'); // Formulário de edição
+
+                modalTitulo.value = titulo;
+                modalAutor.value = autor;
+                modalDescricao.value = descricao;
+                modalImagem.value = imagem;
+                modalPreco.value = preco;
+
+                // Atualiza o atributo action do formulário com a URL correta
+                formAction.action = `/editar-hq/${id}`;
+            });
+        </script>
+
+        <script>
+            const deleteModal = document.getElementById('deleteModal');
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // O botão que foi clicado
+                const id = button.getAttribute('data-id'); // Captura o ID da HQ
+                const formDelete = deleteModal.querySelector('#deleteForm'); // Formulário de exclusão
+
+                // Atualiza o atributo action do formulário com a URL correta de exclusão
+                formDelete.action = `/excluir-hq/${id}`;
+            });
+        </script>
+
+</body>
+
+</html>
